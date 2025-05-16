@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 23, "column": 0}, "map": {"version":3,"sources":["turbopack:///[project]/middleware.ts"],"sourcesContent":["import { NextResponse, NextRequest } from \"next/server\";\n// This function can be marked `async` if using `await` inside\nexport async function middleware(request: NextRequest) {\n  return NextResponse.redirect(new URL(\"/login\", request.url));\n}\n\nexport const config = {\n  matcher: \"/admin/:path*\",\n};\n"],"names":[],"mappings":";;;;AAAA;AAAA;;AAEO,eAAe,WAAW,OAAoB;IACnD,OAAO,6LAAA,CAAA,eAAY,CAAC,QAAQ,CAAC,IAAI,IAAI,UAAU,QAAQ,GAAG;AAC5D;AAEO,MAAM,SAAS;IACpB,SAAS;AACX"}}]
+}
