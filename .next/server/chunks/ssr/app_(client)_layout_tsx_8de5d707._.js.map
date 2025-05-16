@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 7, "column": 0}, "map": {"version":3,"sources":["file:///Users/tomo/code/dashboard-hr-auto/app/%28client%29/layout.tsx"],"sourcesContent":["import React from \"react\";\nimport { AntdRegistry } from \"@ant-design/nextjs-registry\";\nimport { Layout } from \"antd\";\nimport GHeader from \"@/components/groups/GHeader\";\n\nconst { Content, Header } = Layout;\n\nexport default function ClientLayout({\n  children,\n}: Readonly<{\n  children: React.ReactNode;\n}>) {\n  return (\n    <AntdRegistry>\n      <Layout>{children}</Layout>\n    </AntdRegistry>\n  );\n}\n"],"names":[],"mappings":";;;;AACA;AAAA;AACA;;;;AAGA,MAAM,EAAE,OAAO,EAAE,MAAM,EAAE,GAAG,mIAAA,CAAA,SAAM;AAEnB,SAAS,aAAa,EACnC,QAAQ,EAGR;IACA,qBACE,8OAAC,sNAAA,CAAA,eAAY;kBACX,cAAA,8OAAC,mIAAA,CAAA,SAAM;sBAAE;;;;;;;;;;;AAGf","debugId":null}}]
+}
