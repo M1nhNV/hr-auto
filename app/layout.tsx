@@ -35,6 +35,7 @@ export default function RootLayout({
               <div className="demo-logo" />
               <Space>
                 <Link href="/">Results</Link>
+                <Link href="/report">Report</Link>
                 <Link href="/missions">Mission</Link>
               </Space>
             </Header>
