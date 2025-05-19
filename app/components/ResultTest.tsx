@@ -3,7 +3,19 @@ import data from '../../hr_report_05-12-2025.json'
 import {useEffect, useState} from "react";
 import {Button, Card, Skeleton, Tag} from "antd";
 import {ExpandAltOutlined, RedoOutlined} from "@ant-design/icons";
+import makeColorOfType from "../../shared/MakeStateColor.tsx";
+import MakeStatusColor from "../../shared/MakeStateColor.tsx";
+import {convertColorState, convertTime, ellipsisText} from "../../shared/util.ts";
 
+interface TestProps {
+  uuid: string;
+  title: string;
+  status: string;
+  type:  string;
+  script: string;
+  state: string;
+  duration: number
+}
 export default function ResultTest() {
   const [suits, setSuits] = useState<string[]>([]);
   const [result, setResult] = useState([])
@@ -11,6 +23,7 @@ export default function ResultTest() {
   const [loading, setLoading] = useState(true);
 
   const processedSuits = (suit) => {
+    console.log(suit)
     if (suit.title === 'Check_detail_answer_request_for_new_spec') {
       console.log(suit);
     }
@@ -52,24 +65,22 @@ export default function ResultTest() {
               <tr>
                 <th>title</th>
                 <th>state</th>
-                <th>duration(s)</th>
+                <th>duration</th>
                 <th>Actions</th>
               </tr>
               </thead>
               <tbody>
-              { suit.tests.map(item => (
-                <>
-                  <tr key={item.uuid}>
-                    <td>{item.title}</td>
-                    <td>
-                      <Tag color="green">
-                        {item.state}
-                      </Tag>
-                    </td>
-                    <td>{item.duration}</td>
-                    <td><Button color="primary"><RedoOutlined /></Button></td>
-                  </tr>
-                </>
+              { suit.tests.map((item : TestProps) => (
+                <tr key={item.uuid}>
+                  <td>{ellipsisText(item.title)}</td>
+                  <td>
+                    <Tag color={convertColorState(item.state)}>
+                      {item.state}
+                    </Tag>
+                  </td>
+                  <td>{convertTime(item.duration)}</td>
+                  <td><Button color="primary"><RedoOutlined /></Button></td>
+                </tr>
               ))}
               </tbody>
             </table>

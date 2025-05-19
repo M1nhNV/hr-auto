@@ -1,9 +1,10 @@
 'use client'
 import {useEffect, useState} from "react";
 import {Card, Table, Tag, Space } from "antd";
-import {CloseOutlined, RedoOutlined, SearchOutlined} from "@ant-design/icons";
+import {CloseOutlined, RedoOutlined } from "@ant-design/icons";
 import type { TableProps } from 'antd';
 import { Button } from "antd";
+import AgentsList from "../components/AgentsList.tsx";
 interface MissionProps {
   uuid: string;
   title: string;
@@ -109,7 +110,7 @@ export default function ResultTest() {
   return (
     <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
       <Card title="Agents">
-
+        <AgentsList />
       </Card>
       <Card title="Missions" className="p-2">
         <Table<MissionProps> columns={columns} dataSource={data} />
