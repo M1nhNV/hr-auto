@@ -1,69 +1,82 @@
 import React, { useEffect, useState } from 'react';
-import {Button, Card, Space, Table, Tag} from "antd";
-import {RedoOutlined} from "@ant-design/icons";
+import {Button, Card, Descriptions, Space, Table, Tag, DescriptionsProps} from "antd";
+import {CloseOutlined, RedoOutlined, SyncOutlined} from "@ant-design/icons";
 import { ellipsisText} from "../../shared/util.ts";
+import makeStateColor from "../../shared/MakeStateColor.tsx";
 
 const AgentsList = () => {
 
   const missions =  [
     {
       "title": "TC_ID_4503_CHECK_SETTING_FROM_DAY_AFTER_FRETIREMENT_DISPOSAL_MY_NUMBER",
-      "state": "progress",
+      "state": "processing",
       "uuid": '1'
-    },
-    {
-      "title": "TC_ID_4504_CHECK_SHOW_RETIREMENT_EMPLOYEE",
-      "state": "execute",
-      "uuid": '2'
-    },
-    {
-      "title": "TC_ID_4505_CHECK_SHOW_RETIREMENT_EMPLOYEE",
-      "state": "execute",
-      "uuid": '3'
-    },
-    {
-      "title": "TC_ID_4506_CHECK_DONT_SHOW_RETIREMENT_EMPLOYEE",
-      "state": "execute",
-      "uuid": '4'
-    },
-    {
-      "title": "TC_ID_4507_CHECK_DELETE_EMPLOYEE_RETIREMENT_EMPLOYEE_AT_DISPOSAL",
-      "state": "execute",
-      "uuid": '5'
-    },
-    {
-      "title": "TC_ID_4508_CHECK_DELETE_SUCCESS_EMPLOYEE_RETIREMENT_EMPLOYEE_AT_DISPOSAL",
-      "state": "execute",
-      "uuid": '6'
     }
   ];
-  const pc = [1, 2, 3, 4]
+
+  const items: DescriptionsProps['items'] = [
+    {
+      key: '1',
+      label: 'Env',
+      span: 'filled',
+      children: 'Staging',
+    },
+    {
+      key: '2',
+      label: 'Path',
+      span: 'filled',
+      children: '/Users/tomo/code/jinjer_hr_auto_test',
+    }
+  ];
+
+  const pc = [1, 2]
+
+  const makeColorTextState = (state: string) => {
+    if (state === 'processing') {
+      return 'blue'
+    }
+
+    return 'default'
+  }
+
   return (
     <Space>
-      { pc.map((item) =>
-        <Card title={ 'PC ' + item}>
-          <table className="cTable">
-            <thead>
-            <tr>
-              <th>title</th>
-              <th>state</th>
-              <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            { missions.map(item => (
-              <>
-                <tr key={item.uuid}>
-                  <td>{ellipsisText(item.title)}</td>
-                  <td>
-                    {item.state}
-                  </td>
-                  <td><Button color="primary"><RedoOutlined /></Button></td>
-                </tr>
-              </>
-            ))}
-            </tbody>
-          </table>
+      { pc.map((item, key) =>
+        <Card key={key} title={ 'PC ' + item} style={{ width: "450px"}}>
+          <Space direction="vertical" size="middle">
+            <Descriptions title="Settings" bordered layout="horizontal" items={items} />
+            <Space>
+              <Button type="primary"  icon={<SyncOutlined />}>
+                Async source
+              </Button>
+
+              <Button danger icon={<CloseOutlined />}>
+                End all mission
+              </Button>
+            </Space>
+            <table className="cTable">
+              <thead>
+              <tr>
+                <th>title</th>
+                <th>state</th>
+              </tr>
+              </thead>
+              <tbody>
+              { missions.map(item => (
+                <>
+                  <tr key={item.uuid}>
+                    <td>{ellipsisText(item.title)}</td>
+                    <td>
+                      <Tag color={makeColorTextState(item.state)}>
+                        {item.state}
+                      </Tag>
+                    </td>
+                  </tr>
+                </>
+              ))}
+              </tbody>
+            </table>
+          </Space>
         </Card>
       )}
     </Space>

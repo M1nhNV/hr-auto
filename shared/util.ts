@@ -37,9 +37,9 @@ const convertTime = (ms: number, locale: Locale = 'en'): string => {
   return `${formatted}${label}`;
 }
 
-const ellipsisText = (text: string) => {
-  if (text.length > 20) {
-    return `${text.substr(0, 12)}...`;
+const ellipsisText = (text: string, length: number = 20) => {
+  if (text.length > length) {
+    return `${text.substr(0, length)}...`;
   }
 
   return text;

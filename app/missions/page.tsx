@@ -26,11 +26,6 @@ const columns: TableProps<MissionProps>['columns'] = [
     key: 'script',
   },
   {
-    title: 'Agent',
-    dataIndex: 'agent',
-    key: 'agent',
-  },
-  {
     title: 'Status',
     key: 'status',
     dataIndex: 'status',
@@ -45,6 +40,10 @@ const columns: TableProps<MissionProps>['columns'] = [
         color = 'red'
       }
 
+      if (status === 'waiting') {
+        color = 'default'
+      }
+
       return (
         <Tag color={color}>
           {status.toUpperCase()}
@@ -55,12 +54,18 @@ const columns: TableProps<MissionProps>['columns'] = [
   {
     title: 'Action',
     key: 'action',
-    render: (_, record) => (
-      <Space size="middle">
-        <Button color="primary"><RedoOutlined /></Button>
-        <Button color="danger"><CloseOutlined /></Button>
-      </Space>
-    ),
+    render: (_, record) => {
+      if (record.status === 'waiting') {
+        return (
+
+          <Space size="middle">
+            <Button danger><CloseOutlined />Delete mission</Button>
+          </Space>
+        )
+      }
+
+
+    },
   },
 ];
 
@@ -84,7 +89,15 @@ const data: MissionProps[] = [
   {
     uuid: '9dc6c368-70a8-4a79-a7ef-adf7154909b2',
     title: "Setting_SSO_service ",
-    status: "succeed",
+    status: "executed",
+    type: "run",
+    agent: '',
+    script: "TC_ID_3978_CHECK_RESEND_AND_BULKRESEND_REQUEST",
+  },
+  {
+    uuid: '9dc6c368-70a8-4a79-a7ef-adf7154902b2',
+    title: "Setting_SSO_service ",
+    status: "waiting",
     type: "run",
     agent: '',
     script: "TC_ID_3978_CHECK_RESEND_AND_BULKRESEND_REQUEST",
@@ -109,9 +122,7 @@ export default function ResultTest() {
 
   return (
     <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
-      <Card title="Agents">
-        <AgentsList />
-      </Card>
+      <AgentsList />
       <Card title="Missions" className="p-2">
         <Table<MissionProps> columns={columns} dataSource={data} />
       </Card>
