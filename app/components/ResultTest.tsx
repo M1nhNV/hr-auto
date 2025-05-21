@@ -1,7 +1,20 @@
 'use client'
 import data from '../../hr_report_05-12-2025.json'
 import React, {useEffect, useState} from "react";
-import {Button, Card, Checkbox, Col, Descriptions, Row, Skeleton, Space, Tag, Typography, DescriptionsProps} from "antd";
+import {
+  Button,
+  Card,
+  Checkbox,
+  Col,
+  Descriptions,
+  Row,
+  Skeleton,
+  Space,
+  Tag,
+  Typography,
+  DescriptionsProps,
+  Table
+} from "antd";
 import {ExpandAltOutlined, RedoOutlined} from "@ant-design/icons";
 import makeColorOfType from "../../shared/MakeStateColor.tsx";
 import MakeStatusColor from "../../shared/MakeStateColor.tsx";
@@ -66,7 +79,7 @@ const summaryInfo: DescriptionsProps['items'] = [
 
 export default function ResultTest() {
   const [suits, setSuits] = useState<string[]>([]);
-  const [summaryInfo, setSummaryInfo] = useState<DescriptionsProps>([]);
+  const [summaryInfo, setSummaryInfo] = useState<DescriptionsProps['items']>([]);
   const [result, setResult] = useState([])
   const [openList, setOpenList] = useState([])
   const [loading, setLoading] = useState(true);
@@ -167,7 +180,7 @@ export default function ResultTest() {
         </Checkbox.Group>
       </Card>
       <Card title="Summary">
-        <Descriptions bordered layout="horizontal" items={summaryInfo} />
+        <p>Total: 5400</p>
       </Card>
     <Card title="Result" className="p-2">
       { loading ? <Skeleton /> : renderResult() }

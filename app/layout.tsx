@@ -1,13 +1,12 @@
 'use client'
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import React, {useState} from "react";
+import React from "react";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
-import {Layout, Breadcrumb, Menu} from "antd";
+import {Layout, Breadcrumb, Space} from "antd";
 import { BarChartOutlined, ProjectOutlined, SettingOutlined} from "@ant-design/icons";
 const { Header, Content } = Layout;
-import type { MenuProps } from 'antd';
-import {redirect} from "next/navigation";
+import Link from "next/link";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,40 +18,12 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-type MenuItem = Required<MenuProps>['items'][number];
-
-const items: MenuItem[] = [
-  {
-    label: 'Results',
-    key: 'result',
-    icon: <ProjectOutlined />,
-  },
-  {
-    label: 'Report',
-    key: 'report',
-    icon: <BarChartOutlined />,
-  },
-  {
-    label: 'Mission',
-    key: 'missions',
-    icon: <SettingOutlined />
-  }
-];
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [current, setCurrent] = useState('results');
-  const onClick: MenuProps['onClick'] = (e) => {
-    setCurrent(e.key);
-    if (e.key === 'result') {
-      return redirect('/');
-    }
-
-    redirect(e.key);
-  };
 
   return (
     <html lang="en">
@@ -63,7 +34,11 @@ export default function RootLayout({
           <Layout>
             <Header style={{ display: 'flex', alignItems: 'center', backgroundColor: '#fff' }}>
               <div className="demo-logo" />
-              <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal" items={items} />
+              <Space size="middle">
+                <Link href="/"><ProjectOutlined /> Results</Link>
+                <Link href="/report"><BarChartOutlined /> Report</Link>
+                <Link href="/missions"><SettingOutlined /> Mission</Link>
+              </Space>
             </Header>
             <Layout>
               <Layout style={{ padding: '0 24px 24px' }}>

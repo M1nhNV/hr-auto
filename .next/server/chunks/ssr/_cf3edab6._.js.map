@@ -1,8 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 6, "column": 0}, "map": {"version":3,"sources":[],"names":[],"mappings":"","debugId":null}},
-    {"offset": {"line": 24, "column": 0}, "map": {"version":3,"sources":["file:///Users/tomo/code/dashboard-hr-auto/app/components/ResultTest.tsx"],"sourcesContent":["import data from '../../hr_report_05-16-2025.json'\n\nimport {useEffect} from \"react\";\n\n\nexport default function ResultTest() {\n\n  useEffect(() => {\n    console.log(\"App loaded\", data);\n  }, []);\n\n  return \"<p>List</p>\"\n}\n"],"names":[],"mappings":";;;AAAA;AAEA;;;AAGe,SAAS;IAEtB,CAAA,GAAA,qMAAA,CAAA,YAAS,AAAD,EAAE;QACR,QAAQ,GAAG,CAAC,cAAc,kGAAA,CAAA,UAAI;IAChC,GAAG,EAAE;IAEL,OAAO;AACT","debugId":null}},
-    {"offset": {"line": 43, "column": 0}, "map": {"version":3,"sources":["file:///Users/tomo/code/dashboard-hr-auto/app/page.tsx"],"sourcesContent":["import ResultTest from \"./components/ResultTest.tsx\";\nexport default async function App() {\n\n  return (\n    <div>\n      <p>Home page</p>\n      <ResultTest />\n    </div>\n  );\n}\n"],"names":[],"mappings":";;;;AAAA;;;AACe,eAAe;IAE5B,qBACE,8OAAC;;0BACC,8OAAC;0BAAE;;;;;;0BACH,8OAAC,gIAAA,CAAA,UAAU;;;;;;;;;;;AAGjB","debugId":null}}]
-}
