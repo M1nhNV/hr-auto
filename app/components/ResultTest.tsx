@@ -13,12 +13,16 @@ import {
   Tag,
   Typography,
   DescriptionsProps,
-  Table
+  Table, Flex,
+  Radio,
 } from "antd";
 import {ExpandAltOutlined, RedoOutlined} from "@ant-design/icons";
 import makeColorOfType from "../../shared/MakeStateColor.tsx";
 import MakeStatusColor from "../../shared/MakeStateColor.tsx";
 import {convertColorState, convertTime, ellipsisText} from "../../shared/util.ts";
+import SuitDetail from "./SuitDetail.tsx";
+import {SuitProps} from "../../shared/suit";
+import TableTestCase from "./TableTestCase.tsx";
 
 interface TestProps {
   uuid: string;
@@ -28,6 +32,8 @@ interface TestProps {
   script: string;
   state: string;
   duration: number
+  skipped: boolean;
+  file: string;
 }
 
 const { Text } = Typography;
@@ -35,42 +41,60 @@ const { Text } = Typography;
 const summaryInfo: DescriptionsProps['items'] = [
   {
     key: '1',
+    label: 'Browser name',
+    span: 'filled',
+    children: 'Chrome',
+  },
+  {
+    key: '2',
     label: 'Env',
     span: 'filled',
     children: 'Staging',
   },
   {
-    key: '2',
+    key: '3',
+    label: 'Browser version',
+    span: 'filled',
+    children: '136',
+  },
+  {
+    key: '4',
+    label: 'Start time',
+    span: 'filled',
+    children: '2025/05/20 08:35:48',
+  },
+  {
+    key: '5',
+    label: 'End time',
+    span: 'filled',
+    children: '2025/05/20 13:12:10',
+  },
+  {
+    key: '6',
     label: 'Total time',
     span: 'filled',
     children: '58m 24.2s',
   },
   {
-    key: '2',
+    key: '7',
     label: 'Total case',
     span: 'filled',
     children: '5400',
   },
   {
-    key: '2',
-    label: 'Total case',
+    key: '8',
+    label: 'Total passed',
     span: 'filled',
     children: '5400',
   },
   {
-    key: '2',
-    label: 'Passed',
-    span: 'filled',
-    children: '5400',
-  },
-  {
-    key: '2',
-    label: 'Failed',
+    key: '9',
+    label: 'Total failed',
     span: 'filled',
     children: '100',
   },
   {
-    key: '2',
+    key: '10',
     label: 'Skipped',
     span: 'filled',
     children: '200',
@@ -78,18 +102,14 @@ const summaryInfo: DescriptionsProps['items'] = [
 ];
 
 export default function ResultTest() {
-  const [suits, setSuits] = useState<string[]>([]);
-  const [summaryInfo, setSummaryInfo] = useState<DescriptionsProps['items']>([]);
   const [result, setResult] = useState([])
-  const [openList, setOpenList] = useState([])
+  const [openList, setOpenList] = useState<string[]>([])
+  const [closeList, setCloseList] = useState<string[]>([])
   const [loading, setLoading] = useState(true);
+  const [filterStatus, setFilterStatus] = useState('all');
 
-  const processedSuits = (suit) => {
-
-  }
-
-  const openCollapse = (id: string) => {
-    setOpenList([...openList, id]);
+  const closeCollapse = (id: string) => {
+    setCloseList([...closeList, id])
   }
 
   useEffect(() => {
@@ -98,9 +118,6 @@ export default function ResultTest() {
     console.log("data", data);
     setResult(data.results[0].suites);
 
-    data.results[0].suites.map((suite) => {
-      processedSuits(suite);
-    });
 
     const id = requestAnimationFrame(() => {
       setLoading(false);
@@ -109,50 +126,46 @@ export default function ResultTest() {
     return () => cancelAnimationFrame(id);
   }, []);
 
-  const onChange = () => {
-
+  const onChange = (value: string) => {
+    setFilterStatus(value);
   }
 
+  const hiddenOrNot = (suit: SuitProps) => {
+    if (filterStatus === 'failed' && suit.failures.length === 0) {
+      return 'hidden'
+    }
+
+    if (filterStatus === 'passed' && suit.passes.length === 0) {
+      return 'hidden'
+    }
+
+    if (filterStatus === 'skipped' && suit.skipped.length === 0) {
+      return 'hidden'
+    }
+
+    if (filterStatus === 'pending' && suit.pending.length === 0) {
+      return 'hidden'
+    }
+
+    return 'block'
+  }
   const renderResult = () => {
     return <>
-      { result.map(suit => (
-        <div key={suit.uuid} className="border p-2 m-2">
+      { result.map((suit: SuitProps) => (
+        <div key={suit.uuid} className={ 'border p-2 m-2 ' + hiddenOrNot(suit) }>
           <h3 >
             <b>{ suit.title }</b>
-            <Button onClick={() => openCollapse(suit.uuid)} icon={<ExpandAltOutlined />} />
-            <br />
-            <i>{suit.file}</i>
+            <Button onClick={() => closeCollapse(suit.uuid)} icon={<ExpandAltOutlined />} />
           </h3>
-          <div style={{ padding: '10px' }} className={openList.includes(suit.uuid) ? "block" : 'hidden'}>
-            <table className="cTable">
-              <thead>
-              <tr>
-                <th>title</th>
-                <th>state</th>
-                <th>duration</th>
-                <th>Actions</th>
-              </tr>
-              </thead>
-              <tbody>
-              { suit.tests.map((item : TestProps) => (
-                <tr key={item.uuid}>
-                  <td>{item.title}</td>
-                  <td>
-                    <Tag color={convertColorState(item.state)}>
-                      {item.state}
-                    </Tag>
-                  </td>
-                  <td>{convertTime(item.duration)}</td>
-                  <td>
-                    { item.state === 'failed' ?
-                    <Button color="primary"><RedoOutlined /> Re-run</Button>
-                      : ''
-                    }
-                  </td>
-                </tr>
-              ))}
-              </tbody>
-            </table>
+          <i>{suit.file}</i>
+          <div style={{ padding: '10px' }} className={!closeList.includes(suit.uuid) ? "block" : 'hidden'}>
+            { suit.suites.map((suit: SuitProps ) => (
+              <SuitDetail key={suit.uuid} filterStatus={filterStatus} suit={suit} />
+            ))}
+
+            { suit.tests.length === 0 ? '' :
+              <TableTestCase tests={suit.tests} filterStatus={filterStatus} />
+            }
           </div>
         </div>
       ))}
@@ -162,29 +175,29 @@ export default function ResultTest() {
   return (
     <Space direction="vertical" size={24} style={{ display: 'flex' }}>
       <Card title="Actions filte">
-        <Checkbox.Group style={{ width: '100%' }} onChange={onChange}>
+        <Radio.Group style={{ width: '100%'}} value={filterStatus} onChange={(e) => onChange(e.target.value)}>
           <Row>
-            <Col span={2}>
-              <Checkbox value="passed"><Text type="success">Show Passed</Text></Checkbox>
+            <Col span={4}>
+              <Radio value="all"><Text type="secondary">Show all</Text></Radio>
             </Col>
-            <Col span={2}>
-              <Checkbox value="failed"><Text type="danger">Show failed</Text></Checkbox>
+            <Col span={4}>
+              <Radio value="passed"><Text type="success">Show Passed</Text></Radio>
             </Col>
-            <Col span={2}>
-              <Checkbox value="bug"><Text type="warning">Show bug</Text></Checkbox>
+            <Col span={4}>
+              <Radio value="failed"><Text type="danger">Show failed</Text></Radio>
             </Col>
-            <Col span={2}>
-              <Checkbox value="skipped"><Text>Show skipped</Text></Checkbox>
+            <Col span={4}>
+              <Radio value="bug"><Text type="warning">Show bug</Text></Radio>
+            </Col>
+            <Col span={4}>
+              <Radio value="skipped"><Text>Show skipped</Text></Radio>
             </Col>
           </Row>
-        </Checkbox.Group>
+        </Radio.Group>
       </Card>
-      <Card title="Summary">
-        <p>Total: 5400</p>
+      <Card title="Result" className="p-2">
+        { loading ? <Skeleton /> : renderResult() }
       </Card>
-    <Card title="Result" className="p-2">
-      { loading ? <Skeleton /> : renderResult() }
-    </Card>
     </Space>
   )
 }

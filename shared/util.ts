@@ -3,7 +3,15 @@ const convertColorState = (state: string) => {
     return 'red';
   }
 
-  return 'green';
+  if (state === 'passed') {
+    return 'green';
+  }
+
+  if (state === 'pending') {
+    return 'yellow';
+  }
+
+  return 'default';
 }
 
 type Locale = 'vi' | 'en';
